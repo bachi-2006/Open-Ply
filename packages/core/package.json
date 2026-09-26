@@ -1,0 +1,32 @@
+{
+  "name": "@openply/core",
+  "version": "0.5.9",
+  "description": "openPly core: shared types, LLM client, orchestrator, security",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --outDir dist --external better-sqlite3",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --outDir dist --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "diff": "^5.2.0",
+    "glob": "^10.3.0",
+    "ignore": "^5.3.0",
+    "openai": "^4.40.0"
+  },
+  "optionalDependencies": {
+    "@anthropic-ai/sdk": "^0.39.0"
+  },
+  "devDependencies": {
+    "@types/diff": "^5.2.0",
+    "@types/node": "^20.11.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  },
+  "license": "MIT"
+}

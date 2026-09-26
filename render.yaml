@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: openply-api
+    env: node
+    region: oregon
+    plan: free
+    rootDir: site
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NODE_ENV
+        value: production
+      - key: OPENPLY_ROOT
+        value: /var/www

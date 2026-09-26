@@ -1,0 +1,136 @@
+{
+  "name": "openply-vscode",
+  "displayName": "openPly",
+  "description": "AI coding assistant — free, local-first, multi-agent. Your code stays yours.",
+  "version": "0.4.0",
+  "publisher": "openPly",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "ai",
+    "coding",
+    "assistant",
+    "open-source",
+    "free",
+    "cli",
+    "multi-agent"
+  ],
+  "activationEvents": [
+    "onLanguage:typescript",
+    "onLanguage:javascript",
+    "onLanguage:python",
+    "onLanguage:rust",
+    "onLanguage:go",
+    "onCommand:openply.start",
+    "onCommand:openply.chat",
+    "onCommand:openply.webview"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "openply.start",
+        "title": "openPly: Start in Terminal"
+      },
+      {
+        "command": "openply.chat",
+        "title": "openPly: Chat"
+      },
+      {
+        "command": "openply.explain",
+        "title": "openPly: Explain Selected Code"
+      },
+      {
+        "command": "openply.refactor",
+        "title": "openPly: Refactor Selected Code"
+      },
+      {
+        "command": "openply.addTests",
+        "title": "openPly: Add Tests for File"
+      },
+      {
+        "command": "openply.fixDiagnostics",
+        "title": "openPly: Fix All Issues"
+      },
+      {
+        "command": "openply.toggleMode",
+        "title": "openPly: Toggle Plan/Build Mode"
+      },
+      {
+        "command": "openply.selectModel",
+        "title": "openPly: Select Model"
+      },
+      {
+        "command": "openply.showOutput",
+        "title": "openPly: Show Output"
+      },
+      {
+        "command": "openply.webview",
+        "title": "openPly: Open Chat Panel"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "openply.chat",
+        "key": "ctrl+shift+p ctrl+shift+o"
+      },
+      {
+        "command": "openply.webview",
+        "key": "ctrl+shift+p ctrl+shift+c"
+      },
+      {
+        "command": "openply.toggleMode",
+        "key": "ctrl+shift+p ctrl+shift+m"
+      },
+      {
+        "command": "openply.explain",
+        "key": "ctrl+shift+p ctrl+shift+e",
+        "when": "editorHasSelection"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "openply.explain",
+          "when": "editorHasSelection",
+          "group": "openply"
+        },
+        {
+          "command": "openply.refactor",
+          "when": "editorHasSelection",
+          "group": "openply"
+        },
+        {
+          "command": "openply.addTests",
+          "group": "openply"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "openply.webview",
+          "group": "openply"
+        }
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openply26/openply"
+  },
+  "scripts": {
+    "vscode:prepublish": "npx tsc -p ./tsconfig.json",
+    "package": "npx vsce package",
+    "publish": "npx vsce publish"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.9.2",
+    "typescript": "^5.5.0"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "@openply/mcp",
+  "version": "0.5.9",
+  "description": "openPly MCP server — expose agents as tools for Claude Desktop, Cursor, and other MCP clients",
+  "main": "./dist/index.js",
+  "bin": {
+    "openply-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs --outDir dist",
+    "dev": "tsup src/index.ts --format cjs --outDir dist --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@openply/core": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  },
+  "license": "MIT"
+}
