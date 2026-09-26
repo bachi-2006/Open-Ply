@@ -48,7 +48,7 @@ function getRoot() {
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_KEY || ''
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || ''
 const DEFAULT_MODEL = process.env.GEMINI_MODEL || 'google/gemini-3.8-flash'
-const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173,http://localhost:4173,https://openply.pages.dev')
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173,http://localhost:4173,https://openply.pages.dev,https://openply-app-2026.web.app,https://openply-app-2026.firebaseapp.com')
   .split(',')
   .map(o => o.trim())
   .filter(Boolean)
