@@ -5,7 +5,7 @@ services:
     region: oregon
     plan: free
     rootDir: site
-    buildCommand: npm ci --include=dev && npm run build
+    buildCommand: npm install && npm run build
     startCommand: npm run start
     healthCheckPath: /api/health
     envVars:
@@ -13,5 +13,9 @@ services:
         value: 20
       - key: NODE_ENV
         value: production
-      - key: OPENPLY_ROOT
-        value: /var/www
+      - key: GEMINI_MODEL
+        value: google/gemini-3.8-flash
+      - key: ALLOWED_ORIGINS
+        value: https://openply-app-2026.web.app,https://openply-app-2026.firebaseapp.com,http://localhost:5173
+      - key: GEMINI_API_KEY
+        sync: false
