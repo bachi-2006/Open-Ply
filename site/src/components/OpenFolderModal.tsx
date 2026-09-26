@@ -41,6 +41,7 @@ export default function OpenFolderModal({ open, onClose }: Props) {
   const [browsingNative, setBrowsingNative] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const folderInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (open) {
@@ -76,12 +77,64 @@ export default function OpenFolderModal({ open, onClose }: Props) {
     }
   }
 
+  const handleBrowseFolder = async () => {
+    setBrowsingNative(true)
+    setError(null)
+
+    // 1. Try Browser Native File System Directory Picker
+    if ('showDirectoryPicker' in window) {
+      try {
+        const dirHandle = await (window as any).showDirectoryPicker()
+        if (dirHandle && dirHandle.name) {
+          await handleOpen(dirHandle.name)
+          setBrowsingNative(false)
+          return
+        }
+      } catch (err: any) {
+        if (err.name === 'AbortError') {
+          setBrowsingNative(false)
+          return
+        }
+      }
+    }
+
+    // 2. Try OS Native Dialog via Server
+    try {
+      await pickNativeFolder()
+      onClose()
+    } catch {
+      // 3. Fallback to HTML5 directory picker input
+      folderInputRef.current?.click()
+    } finally {
+      setBrowsingNative(false)
+    }
+  }
+
+  const onFolderInputSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+    const firstPath = files[0].webkitRelativePath || files[0].name
+    const folderName = firstPath.split('/')[0]
+    if (folderName) {
+      handleOpen(folderName)
+    }
+  }
+
   const currentFolder = state.root
     ? state.root.replace(/\\/g, '/').split('/').filter(Boolean).pop() || state.root
     : 'None'
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Hidden File Input with directory attributes */}
+      <input
+        type="file"
+        ref={folderInputRef}
+        onChange={onFolderInputSelected}
+        style={{ display: 'none' }}
+        {...({ webkitdirectory: '', directory: '', multiple: true } as any)}
+      />
+
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
@@ -127,24 +180,13 @@ export default function OpenFolderModal({ open, onClose }: Props) {
           <button
             type="button"
             disabled={loading || browsingNative}
-            onClick={async () => {
-              setBrowsingNative(true)
-              setError(null)
-              try {
-                await pickNativeFolder()
-                onClose()
-              } catch (err: any) {
-                setError(err?.message || 'Folder selection failed')
-              } finally {
-                setBrowsingNative(false)
-              }
-            }}
+            onClick={handleBrowseFolder}
             className="w-full flex items-center justify-center gap-2 rounded-lg border border-cyan-500/40 bg-gradient-to-r from-cyan-950/70 via-blue-950/60 to-cyan-950/70 py-2.5 px-3 text-xs font-semibold text-cyan-200 hover:border-cyan-400 hover:from-cyan-900/80 hover:to-blue-900/80 transition-all shadow-lg shadow-cyan-950/30 group cursor-pointer disabled:opacity-50"
           >
             {browsingNative ? (
               <>
                 <Loader2 size={14} className="animate-spin text-cyan-400" />
-                <span>Waiting for Windows Explorer selection...</span>
+                <span>Opening File Explorer...</span>
               </>
             ) : (
               <>

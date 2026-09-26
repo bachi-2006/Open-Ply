@@ -75,9 +75,6 @@ interface ORModel {
 
 const FALLBACK_MODELS: ORModel[] = [
   { id: 'google/gemini-3.8-flash', name: '⚡ Gemini 3.8 Flash (Primary Autonomous)', context: 1048576, promptPrice: 0, completionPrice: 0, free: true },
-  { id: 'google/gemini-3.6-flash', name: '🛡️ Gemini 3.6 Flash (Context Shield)', context: 1048576, promptPrice: 0, completionPrice: 0, free: true },
-  { id: 'google/gemini-2.5-flash', name: '⚡ Gemini 2.5 Flash (Sentinel Stable)', context: 1048576, promptPrice: 0, completionPrice: 0, free: true },
-  { id: 'google/gemini-2.5-pro', name: '🧠 Gemini 2.5 Pro (Deep Audit)', context: 2097152, promptPrice: 0, completionPrice: 0, free: true },
   { id: 'stealth/ox-alpha', name: 'Ox Alpha (Free)', context: 1048576, promptPrice: 0, completionPrice: 0, free: true },
   { id: 'deepseek/deepseek-chat-v3-0324', name: 'DeepSeek V3 0324', context: 163840, promptPrice: 0.27, completionPrice: 1.1, free: false },
   { id: 'openai/gpt-4o-mini', name: 'GPT-4o mini', context: 128000, promptPrice: 0.15, completionPrice: 0.6, free: false },
@@ -803,8 +800,18 @@ app.post('/api/dialog/pick-folder', async (_req, res) => {
   try {
     let selectedPath = ''
     if (process.platform === 'win32') {
-      const psCommand = `powershell -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms; $f = New-Object System.Windows.Forms.FolderBrowserDialog; $f.Description = 'Select Workspace Folder for SentinelFlow'; $f.ShowNewFolderButton = $true; $top = New-Object System.Windows.Forms.Form; $top.TopMost = $true; if ($f.ShowDialog($top) -eq [System.Windows.Forms.DialogResult]::OK) { [Console]::Out.Write($f.SelectedPath) }"`
-      selectedPath = execSync(psCommand, { encoding: 'utf-8', timeout: 60000 }).trim()
+      const psScript = `
+[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms') | Out-Null
+$dialog = New-Object System.Windows.Forms.FolderBrowserDialog
+$dialog.Description = 'Select Workspace Folder for SentinelFlow'
+$dialog.ShowNewFolderButton = $true
+if ($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+  [Console]::Out.Write($dialog.SelectedPath)
+}
+`.trim()
+      const b64 = Buffer.from(psScript, 'utf16le').toString('base64')
+      const rawOut = execSync(`powershell.exe -STA -NoProfile -ExecutionPolicy Bypass -EncodedCommand ${b64}`, { encoding: 'utf-8', timeout: 120000 })
+      selectedPath = rawOut.split('\n').filter(l => !l.startsWith('#<') && !l.startsWith('<')).join('').trim()
     } else if (process.platform === 'darwin') {
       selectedPath = execSync(`osascript -e 'POSIX path of (choose folder with prompt "Select Project Folder")'`, { encoding: 'utf-8', timeout: 60000 }).trim()
     } else {

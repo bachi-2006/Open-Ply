@@ -1,4 +1,4 @@
-﻿import AnimatedBackground from './AnimatedBackground'
+import AnimatedBackground from './AnimatedBackground'
 import Reveal from './Reveal'
 import { motion } from 'framer-motion'
 
@@ -7,7 +7,7 @@ const MODELS = [
   { name: 'DeepSeek V3 0324', provider: 'OpenRouter', tag: 'Coding', color: '#00e5ff' },
   { name: 'Claude Sonnet 3.5', provider: 'OpenRouter', tag: 'Pro', color: '#9775fa' },
   { name: 'GPT-4o mini', provider: 'OpenRouter', tag: 'Fast', color: '#5c7cfa' },
-  { name: 'Gemini 2.5 Flash', provider: 'OpenRouter', tag: '1M ctx', color: '#5c7cfa' },
+  { name: 'Gemini 3.8 Flash', provider: 'Google AI Studio', tag: 'Autonomous · 1M ctx', color: '#00e5ff' },
   { name: 'Llama 3.3 70B', provider: 'OpenRouter', tag: 'Open source', color: '#00e5ff' },
   { name: 'DeepSeek Coder V2', provider: 'Ollama (Local)', tag: 'Local', color: '#fcc419' },
   { name: 'Qwen 2.5 Coder', provider: 'Ollama (Local)', tag: 'Local', color: '#fcc419' },
